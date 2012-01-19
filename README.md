@@ -18,13 +18,12 @@ Monolog compatible logging handler posting array of parameters to configured hos
     $logger->addLog(new \Exception('Very critical information!'));
 
     // log an array of parameters
-
     $logger->addLog(array(
         'message' => 'Very critical information!',
         'type'    => 'CRITICAL',
     ));
 
-    // place string (Remotelog test enviroment) is added automatically to sent parameters
+    // place parameter (Remotelog test enviroment) is added automatically to sent parameters
 
 ```
 
