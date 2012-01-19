@@ -22,7 +22,7 @@ class Logger
      */
     protected $place;
 
-    public function __construct($server, $place, $route = '/api/monitoring')
+    public function __construct($server, $place, $route = '')
     {
         $this->server = $server;
         $this->place  = $place;
