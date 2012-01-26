@@ -10,10 +10,12 @@ use Remotelog\Logger as Remotelog;
 class RemotelogHandler extends AbstractProcessingHandler
 {
     protected $logger;
+    protected $enabled;
 
-    public function __construct($server, $place, $route, $level = Logger::ERROR)
+    public function __construct($server, $place, $route, $enabled, $level = Logger::ERROR)
     {
         $this->logger = new Remotelog($server, $place, $route);
+        $this->enabled = $enabled;
 
         parent::__construct($level);
     }
@@ -30,7 +32,9 @@ class RemotelogHandler extends AbstractProcessingHandler
 
     public function addLog($log)
     {
-        $this->logger->addLog($log);
+        if($this->enabled) {
+            $this->logger->addLog($log);
+        }
     }
 
 }
