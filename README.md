@@ -66,7 +66,7 @@ And update files;
       require_once $remotelogDir . 'Logger.php';
       require_once $remotelogDir . 'MagentoLogger.php';
 
-      $remotelog = new \Remotelog\MagentoLogger('http://extranet.hatimeria.com', 'shop.whiteandblack.pl test', '/api/monitoring');
+      $remotelog = new \Remotelog\MagentoLogger('remotelogserver.localhost', 'Remotelog test enviroment', '/api/monitoring');
       $remotelog->addLog($reportData);
       // ... end
       $processor->saveReport($reportData);
