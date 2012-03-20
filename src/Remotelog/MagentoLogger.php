@@ -6,24 +6,41 @@ use Mage;
 
 class MagentoLogger extends Logger
 {
-    public function addLog($log)
+    public function addExceptionLog($log)
     {
-        if (true !== Mage::registry('remotelog_enabled')) {
-            return;
-        }
         $trace = $log[1];
         $trace = explode("\n", $trace);
 
         $mageLog = array(
             'message'     => $log[0],
             'stack_trace' => $trace,
-            'type'        => 'CRITICAl',
+            'type'        => 'CRITICAL',
             'code'        => 500,
-            'url'         => Mage::helper('core/http')->getRequestUri(),
-            'client_ip'   => Mage::helper('core/http')->getRemoteAddr(),
         );
 
+        self::addLog($mageLog);
+    }
+
+    public function addLog($log)
+    {
+        if (true !== Mage::registry('remotelog_enabled')) {
+            return;
+        }
+
+        $mageLog = array();
+
+        if('cli' !== php_sapi_name()) {
+            $mageLog = array_merge(array(
+                'url'       => Mage::helper('core/http')->getRequestUri(),
+                'client_ip' => Mage::helper('core/http')->getRemoteAddr(),
+            ), $log);
+            if (!isset($mageLog['parameters']) || !is_array($mageLog['parameters'])) {
+	        $mageLog['parameters'] = array();
+	    }
+	    $mageLog['parameters']['post'] = $_POST;
+        }
+
         parent::addLog($mageLog);
-    } 
+    }
 
 }
