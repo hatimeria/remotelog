@@ -35,9 +35,9 @@ class MagentoLogger extends Logger
                 'client_ip' => Mage::helper('core/http')->getRemoteAddr(),
             ), $log);
             if (!isset($mageLog['parameters']) || !is_array($mageLog['parameters'])) {
-	        $mageLog['parameters'] = array();
-	    }
-	    $mageLog['parameters']['post'] = $_POST;
+                $mageLog['parameters'] = array();
+	        }
+	        $mageLog['parameters']['post'] = $_POST;
         }
 
         parent::addLog($mageLog);

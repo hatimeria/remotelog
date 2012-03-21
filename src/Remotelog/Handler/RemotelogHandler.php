@@ -27,7 +27,7 @@ class RemotelogHandler extends AbstractProcessingHandler
             'message' => $record['message']
         );
         
-        foreach(array('url', 'client_ip', 'code') as $key) {
+        foreach(array('url', 'client_ip', 'code', 'parameters') as $key) {
             if(isset($record[$key])) {
                 $log[$key] = $record[$key];
             }
