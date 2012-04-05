@@ -37,7 +37,24 @@ class MagentoLogger extends Logger
             if (!isset($mageLog['parameters']) || !is_array($mageLog['parameters'])) {
                 $mageLog['parameters'] = array();
 	        }
-	        $mageLog['parameters']['post'] = $_POST;
+            if(!empty($_POST)) {
+                $mageLog['parameters']['post'] = $_POST;
+            }
+            if(!empty($_FILES)) {
+                $mageLog['parameters']['files'] = $_FILES;
+            }
+            if(!empty($_SESSION)) {
+                $mageLog['parameters']['session'] = $_SESSION;
+            }
+            if(!empty($_COOKIE)) {
+                $mageLog['parameters']['cookie'] = $_COOKIE;
+            }
+            if(isset($_SERVER['HTTP_USER_AGENT'])) {
+                $mageLog['parameters']['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+            }
+            if(isset($_SERVER['HTTP_REFERER'])) {
+                $mageLog['parameters']['referer'] = $_SERVER['HTTP_REFERER'];
+            }
         }
 
         parent::addLog($mageLog);
