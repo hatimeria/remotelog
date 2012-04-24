@@ -60,4 +60,16 @@ class MagentoLogger extends Logger
         parent::addLog($mageLog);
     }
 
+    public function handleMageShutdown()
+    {
+        $error = error_get_last();
+        if (is_null($error) || ($error instanceof \ErrorException)) return;
+        if (!in_array($error['type'], array(E_ERROR, E_RECOVERABLE_ERROR, E_CORE_ERROR))) return;
+
+        $message = sprintf('Fatal error: %s in %s on line %s', $error['message'], $error['file'], $error['line']);
+
+        $e = new ErrorException($message);
+        Mage::printException($e);
+    }
+
 }

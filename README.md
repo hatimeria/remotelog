@@ -61,13 +61,8 @@ And update files;
 
    if (isset($reportData) && is_array($reportData)) {
       // ... begining
-      $remotelogDir = Mage::getBaseDir('lib') . '/remotelog/src/Remotelog/';
-
-      require_once $remotelogDir . 'Logger.php';
-      require_once $remotelogDir . 'MagentoLogger.php';
-
-      $remotelog = new \Remotelog\MagentoLogger('remotelogserver.localhost', 'Remotelog test enviroment', '/api/monitoring');
-      $remotelog->addLog($reportData);
+      $remotelog = Mage::registry('remotelog');
+      $remotelog->addExceptionLog($reportData);
       // ... end
       $processor->saveReport($reportData);
    }
@@ -84,21 +79,17 @@ These part of code will take care of your fatal errors. If you don't like to cat
     // index.php
 
     // ...
-    function handleMageShutdown()
-    {
-        $error = error_get_last();
-        if (is_null($error) || ($error instanceof \ErrorException)) return;
-        if (!in_array($error['type'], array(E_ERROR, E_RECOVERABLE_ERROR, E_CORE_ERROR))) return;
+    $remotelogDir = 'lib/remotelog/src/Remotelog/';
 
-        $message = sprintf('Fatal error: %s in %s on line %s', $error['message'], $error['file'], $error['line']);
+    require_once $remotelogDir . 'Logger.php';
+    require_once $remotelogDir . 'MagentoLogger.php';
 
-        $e = new ErrorException($message);
-        Mage::printException($e);
-    }
+    $remotelog = new \Remotelog\MagentoLogger('http://remotelogserver.localhost', 'Remotelog test enviroment', '/api/monitoring');
+    Mage::register('remotelog', $remotelog);
+    Mage::register('remotelog_enabled', false);
+    register_shutdown_function(array($remotelog, 'handleMageShutdown'));
 
-    register_shutdown_function('handleMageShutdown');
-
-    // before Magento run method
+    // ... before Magento run method
 
     $mageRunCode = isset($_SERVER['MAGE_RUN_CODE']) ? $_SERVER['MAGE_RUN_CODE'] : '';
     $mageRunType = isset($_SERVER['MAGE_RUN_TYPE']) ? $_SERVER['MAGE_RUN_TYPE'] : 'store';
