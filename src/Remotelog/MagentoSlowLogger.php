@@ -63,7 +63,6 @@ class MagentoSlowLogger
             $limit = $this->emptyRequestLimit;
         }
 
-        $limit = $limit;
         $result = $stop * 1000  - $this->start * 1000;
 
         if ($result > $limit) {
