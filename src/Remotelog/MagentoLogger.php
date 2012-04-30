@@ -68,7 +68,7 @@ class MagentoLogger extends Logger
 
         $message = sprintf('Fatal error: %s in %s on line %s', $error['message'], $error['file'], $error['line']);
 
-        $e = new ErrorException($message);
+        $e = new \ErrorException($message);
         Mage::printException($e);
     }
 
