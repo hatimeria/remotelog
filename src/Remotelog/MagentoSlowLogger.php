@@ -29,7 +29,7 @@ class MagentoSlowLogger
     /**
      * @var array
      */
-    protected $excludePatterns = array();
+    protected $excludePatterns = array('/admin/i');
 
     public function __construct(MagentoLogger $logger, $autostart = true, $emptyRequestLimit = 2000, $postRequestLimit = 4000)
     {
