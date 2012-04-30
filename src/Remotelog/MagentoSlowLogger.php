@@ -26,6 +26,10 @@ class MagentoSlowLogger
      * @var int
      */
     protected $start;
+    /**
+     * @var array
+     */
+    protected $excludePatterns = array();
 
     public function __construct(MagentoLogger $logger, $autostart = true, $emptyRequestLimit = 2000, $postRequestLimit = 4000)
     {
@@ -47,6 +51,19 @@ class MagentoSlowLogger
         $this->start = microtime(true);
     }
 
+    public function setExcludePatterns($patterns)
+    {
+        if (!is_array($patterns)) {
+            throw new \ErrorException('You can set only array of exclude patterns');
+        }
+        $this->excludePatterns = $patterns;
+    }
+
+    public function addExcludePattern($pattern)
+    {
+        $this->excludePatterns[] = $pattern;
+    }
+
     public function stop()
     {
         $stop = microtime(true);
@@ -64,16 +81,25 @@ class MagentoSlowLogger
         }
 
         $result = $stop * 1000  - $this->start * 1000;
-
-        if ($result > $limit) {
-            $message = sprintf('Slow application execution %.2f (exceeded %.2f)', $result, $result - $limit);
-            $this->logger->addLog(array(
-                'message'     => $message,
-                'stack_trace' => array(),
-                'type'        => 'SLOW',
-                'code'        => 200,
-            ));
+        if ($result <= $limit) {
+            return;
         }
+        if (count($this->excludePatterns)) {
+            $currentUrl = Mage::helper('core/http')->getRequestUri();
+            foreach ($this->excludePatterns as $pattern) {
+                if (preg_match($pattern, $currentUrl)) {
+                    return;
+                }
+            }
+        }
+
+        $message = sprintf('Slow application execution %.2f (exceeded %.2f)', $result, $result - $limit);
+        $this->logger->addLog(array(
+            'message'     => $message,
+            'stack_trace' => array(),
+            'type'        => 'SLOW',
+            'code'        => 200,
+        ));
     }
 
 }
