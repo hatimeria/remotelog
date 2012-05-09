@@ -55,6 +55,8 @@ class MagentoLogger extends Logger
             if(isset($_SERVER['HTTP_REFERER'])) {
                 $mageLog['parameters']['referer'] = $_SERVER['HTTP_REFERER'];
             }
+        } else {
+            $mageLog = $log;
         }
 
         parent::addLog($mageLog);
