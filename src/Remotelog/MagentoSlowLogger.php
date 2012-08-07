@@ -41,7 +41,7 @@ class MagentoSlowLogger
             $this->start = microtime(true);
         }
     }
-
+    
     public function start()
     {
         if (null !== $this->start) {
@@ -64,7 +64,7 @@ class MagentoSlowLogger
         $this->excludePatterns[] = $pattern;
     }
 
-    public function stop()
+    public function stop($prefix = 'Slow application execution')
     {
         $stop = microtime(true);
         if (null === $this->start) {
@@ -93,7 +93,7 @@ class MagentoSlowLogger
             }
         }
 
-        $message = sprintf('Slow application execution %.2f (exceeded %.2f)', $result, $result - $limit);
+        $message = sprintf('%s %.2f (exceeded %.2f)',$prefix, $result, $result - $limit);
         $this->logger->addLog(array(
             'message'     => $message,
             'stack_trace' => array(),

@@ -73,5 +73,12 @@ class MagentoLogger extends Logger
         $e = new \ErrorException($message);
         Mage::printException($e);
     }
+    
+    public function getNewSlowLogger($autostart = true, $requestLimit = 1000)
+    {
+        $remotelogDir = 'lib/remotelog/src/Remotelog/';
+        require_once $remotelogDir . 'MagentoSlowLogger.php';
+        return new \Remotelog\MagentoSlowLogger($this,$autostart,$requestLimit,$requestLimit);
+    }
 
 }
