@@ -61,8 +61,9 @@ And update files;
 
    if (isset($reportData) && is_array($reportData)) {
       // ... begining
-      $remotelog = Mage::registry('remotelog');
-      $remotelog->addExceptionLog($reportData);
+      if ($remotelog = Mage::registry('remotelog')) {
+        $remotelog->addExceptionLog($reportData);
+      }
       // ... end
       $processor->saveReport($reportData);
    }
@@ -71,7 +72,7 @@ $processor->processReport();
 
 ```
 
-These part of code will take care of your fatal errors. If you don't like to catch fatal errors you don't have to add it. 
+These part of code will configure remotelog and it will take care of your fatal errors. If you don't like to catch fatal errors you can remove register_shutdown_function. 
 
 ``` php
 <?php
