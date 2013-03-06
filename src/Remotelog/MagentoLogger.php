@@ -76,7 +76,7 @@ class MagentoLogger extends Logger
     
     public function getNewSlowLogger($autostart = true, $requestLimit = 1000)
     {
-        $remotelogDir = 'lib/remotelog/src/Remotelog/';
+        $remotelogDir = dirname(__FILE__).'/';
         require_once $remotelogDir . 'MagentoSlowLogger.php';
         return new \Remotelog\MagentoSlowLogger($this,$autostart,$requestLimit,$requestLimit);
     }
